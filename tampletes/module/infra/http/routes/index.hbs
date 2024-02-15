@@ -1,0 +1,17 @@
+import { Router } from "express";
+
+import {{singular}}CreationController from "../controllers/{{plural}}CreationController";
+
+import Container from "shared/container";
+
+export const {{plural}}Router = Router();
+
+const container = new Container();
+
+const {{singular}}creationController = container.resolve({{singular}}CreationController);
+
+{{plural}}Router.post("/", {{singular}}creationController.execute);
+{{plural}}Router.get("/by/id/:id");
+{{plural}}Router.get("/");
+{{plural}}Router.put("/");
+{{plural}}Router.delete("/by/id/:id");

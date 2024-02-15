@@ -1,0 +1,29 @@
+import { inject, injectable } from "shared/container/decorators";
+
+import I{{plural}}Repository from "../repositories/I{{plural}}Repository";
+
+import {{singular}}Entity from "../entities/{{singular}}Entity";
+
+interface IFind{{singular}}ByID {
+  id: string;
+}
+
+interface IFind{{singular}}ByIDResponse {
+  {{singular}}: {{singular}}Entity | null;
+}
+
+@injectable()
+export default class Find{{singular}}ByID {
+  constructor(
+    @inject("{{plural}}Repository")
+    private {{plural}}Repository: I{{plural}}Repository,
+  ) {}
+
+  async execute({ id }: IFind{{singular}}ByID): Promise<IFind{{singular}}ByIDResponse> {
+    const {{singular}} = await this.{{plural}}Repository.findByID({
+      id,
+    });
+
+    return { {{singular}} };
+  }
+}

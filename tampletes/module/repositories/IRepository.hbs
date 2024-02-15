@@ -1,0 +1,14 @@
+import {{singular}}Entity from "../entities/{{singular}}Entity";
+import { ICreate{{singular}}, IFind{{singular}}ByID, IList{{plural}}, IUpdate{{singular}}, IDelete{{singular}} } from "./types";
+
+export default interface I{{plural}}Repository {
+  create(data: ICreate{{singular}}): Promise<void>;
+
+  findByID(data: IFind{{singular}}ByID): Promise<{{singular}}Entity | null>;
+
+  list(data?: IList{{plural}}): Promise<{{singular}}Entity[]>;
+
+  update(data: IUpdate{{singular}}): Promise<void>;
+
+  delete(data: IDelete{{singular}}): Promise<void>;
+}

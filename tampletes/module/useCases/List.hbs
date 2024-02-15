@@ -1,0 +1,28 @@
+import { inject, injectable } from "shared/container/decorators";
+
+import I{{plural}}Repository from "../repositories/I{{plural}}Repository";
+
+import {{singular}}Entity from "../entities/{{singular}}Entity";
+
+interface IList{{plural}} {
+  take?: number;
+  skip?: number;
+}
+
+interface IList{{plural}}Response {
+  {{plural}}: {{singular}}Entity[];
+}
+
+@injectable()
+export default class List{{plural}} {
+  constructor(
+    @inject("{{plural}}Repository")
+    private {{plural}}Repository: I{{plural}}Repository,
+  ) {}
+
+  async execute(data?: IList{{plural}}): Promise<IList{{plural}}Response> {
+    const {{plural}} = await this.{{plural}}Repository.list(data);
+
+    return { {{plural}} };
+  }
+}

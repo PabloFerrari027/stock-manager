@@ -1,0 +1,60 @@
+import I{{plural}}Repository from "../../repositories/I{{plural}}Repository";
+
+import {{singular}}Entity from "../../entities/{{singular}}Entity";
+
+import orm from "shared/config/orm";
+
+import { injectable } from "tsyringe";
+
+import {
+  ICreate{{singular}},
+  IUpdate{{singular}},
+  IFind{{singular}}ByID,
+  IFind{{singular}}ByName,
+  IFind{{singular}}BySKUPrefix,
+  IList{{plural}},
+  IDelete{{singular}},
+} from "../../repositories/types";
+
+@injectable()
+export default class {{plural}}Repository implements I{{plural}}Repository {
+  public async create({ data }: ICreate{{singular}}) {
+    await orm.postgre.{{plural}}.create({
+      data: {
+        id: data.id,
+      },
+    });
+  }
+
+  public async update({ data }: IUpdate{{singular}}) {
+    await orm.postgre.{{plural}}.update({
+      data: {},
+      where: { id: data.id },
+    });
+  }
+
+  public async findByID({ id }: IFind{{singular}}ByID) {
+    const response = await orm.postgre.{{plural}}.findUnique({ where: { id } });
+
+    if (!response) return null;
+
+    const {{singular}} = {{singular}}Entity.create(response);
+
+    return {{singular}};
+  }
+
+  public async list(data?: IList{{plural}}) {
+    const response = await orm.postgre.{{plural}}.findMany({
+      take: data.take,
+      skip: data.skip,
+    });
+
+    const {{plural}} = response.map(({{singular}}) => new {{singular}}Entity({{singular}}));
+
+    return {{plural}};
+  }
+
+  public async delete({ id }: IDelete{{singular}}) {
+    await orm.postgre.{{plural}}.delete({ where: { id: id } });
+  }
+}

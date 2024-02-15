@@ -1,0 +1,48 @@
+import { Request, Response } from "express";
+
+import { z } from "zod";
+
+import Container from "shared/container";
+
+import Create{{singular}} from "../../../useCases/Create{{singular}}";
+
+export default class {{singular}}CreationController {
+  async execute(req: Request, res: Response) {
+    try {
+      const zodSchema = z.object({});
+
+      const zodResponse = zodSchema.safeParse(req.body);
+
+      if (!zodResponse.success) {
+        return res
+          .status(406)
+          .send(
+            "Verifique se todos os dados estão preenchidos corretamente e tente novamente!",
+          );
+      }
+
+      const { data } = zodResponse;
+
+      const container = new Container();
+
+      const create{{singular}} = container.resolve<Create{{singular}}>(Create{{singular}});
+
+      const { {{singular}} } = await create{{singular}}.execute(data);
+
+      return res.send({
+        id: {{singular}}.id,
+        createdAt: {{singular}}.createdAt,
+        updatedAt: {{singular}}.updatedAt,
+      });
+    } catch (error) {
+      let message = "";
+
+      if (error instanceof Error) message = error.message;
+      else message = `${error}`;
+
+      return res
+        .status(500)
+        .send(`O seguinte erro inesperado aconteceu: \n${message}`);
+    }
+  }
+}

@@ -1,0 +1,32 @@
+import Container from "shared/container";
+import { inject, injectable } from "shared/container/decorators";
+
+import {{singular}}Entity from "../entities/{{singular}}Entity";
+
+import I{{plural}}Repository from "../repositories/I{{plural}}Repository";
+
+interface ICreate{{singular}} {}
+
+interface ICreate{{singular}}Response {
+  {{singular}}: {{singular}}Entity;
+}
+
+@injectable()
+export default class Create{{singular}} {
+  constructor(
+    @inject("{{plural}}Repository")
+    private {{plural}}Repository: I{{plural}}Repository,
+  ) {}
+
+  async execute(data: ICreate{{singular}}): Promise<ICreate{{singular}}Response> {
+    const {{singular}} = {{singular}}Entity.create({
+      ...data,
+    });
+
+    const container = new Container();
+
+    await this.{{plural}}Repository.create({ data: {{singular}} });
+
+    return { {{singular}} };
+  }
+}

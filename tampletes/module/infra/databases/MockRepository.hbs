@@ -1,0 +1,51 @@
+import {{singular}}Entity from "../../entities/{{singular}}Entity";
+
+import I{{plural}}Repository from "../../repositories/I{{plural}}Repository";
+import {
+  ICreate{{singular}},
+  IUpdate{{singular}},
+  IFind{{singular}}ByID,
+  IFind{{singular}}ByName,
+  IFind{{singular}}BySKUPrefix,
+  IList{{plural}},
+  IDelete{{singular}},
+} from "../../repositories/types";
+
+import { injectable } from "shared/container/decorators";
+
+@injectable()
+export default class Mock{{plural}}Repository implements I{{plural}}Repository {
+  public {{plural}}: {{singular}}Entity[] = [];
+
+  public async create({ data }: ICreate{{singular}}) {
+    this.{{plural}}.push({ id: data.id });
+  }
+
+  public async update({ data }: IUpdate{{singular}}) {
+    const index = this.{{plural}}.findIndex((i) => i.id === data.id);
+
+    this.{{plural}}[index] = data;
+  }
+
+  public async findByID({ id }: IFind{{singular}}ByID) {
+    const response = this.{{plural}}.find((i) => i.id === id) || null;
+
+    if (!response) return null;
+
+    const {{singular}} = {{singular}}Entity.create(response);
+
+    return {{singular}};
+  }
+
+  public async list(data?: IList{{plural}}) {
+    const take = data?.take || 10;
+    const skip = data?.skip || 0;
+
+    return this.{{plural}}.slice(skip, take).map(({{singular}}) => {{singular}}Entity.create({{singular}}));
+  }
+
+  public async delete({ id }: IDelete{{singular}}) {
+    const index = this.{{plural}}.findIndex((i) => i.id === id);
+    this.{{plural}}.splice(index, 1);
+  }
+}

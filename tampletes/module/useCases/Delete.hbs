@@ -1,0 +1,23 @@
+import { inject, injectable } from "shared/container/decorators";
+
+import I{{plural}}Repository from "../repositories/I{{plural}}Repository";
+
+import {{singular}}Entity from "../entities/{{singular}}Entity";
+
+interface IDelete{{singular}} {
+  id: string;
+}
+
+@injectable()
+export default class Delete{{singular}} {
+  constructor(
+    @inject("{{plural}}Repository")
+    private {{plural}}Repository: I{{plural}}Repository,
+  ) {}
+
+  async execute({ id }: IDelete{{singular}}): Promise<void> {
+    const {{singular}} = await this.{{plural}}Repository.delete({
+      id,
+    });
+  }
+}

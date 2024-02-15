@@ -1,0 +1,29 @@
+import { Optional } from "shared/@types/optional";
+import Entity from "shared/entities/Entity";
+
+interface I{{singular}}Entity {
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+type Create{{singular}}Entity = Optional<I{{singular}}Entity, "createdAt" | "updatedAt">;
+
+export default class {{singular}}Entity extends Entity<I{{singular}}Entity> {
+  get createdAt() {
+    return this.props.createdAt;
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt;
+  }
+
+  static create(props: Create{{singular}}Entity) {
+    const category = new {{singular}}Entity({
+      ...props,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
+    return category;
+  }
+}

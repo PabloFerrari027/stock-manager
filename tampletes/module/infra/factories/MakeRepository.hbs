@@ -1,0 +1,40 @@
+import "reflect-metadata";
+import Container from "shared/container";
+import { injectable } from "shared/container/decorators";
+
+import Mock{{plural}}Repository from "modules/{{plural}}/infra/databases/Mock{{plural}}Repository";
+import {{plural}}Repository from "../databases{{plural}}Repository";
+
+@injectable()
+export default class Make{{plural}}Repository {
+  execute(stage: "test" | "production" = "production") {
+    switch (stage) {
+      case "test": {
+        const container = new Container();
+
+        container.register({
+          token: "{{plural}}Repository",
+          instance: Mock{{plural}}Repository,
+        });
+
+        break;
+      }
+
+      case "production": {
+        const container = new Container();
+
+        container.register({
+          token: "{{plural}}Repository",
+          instance: {{plural}}Repository,
+        });
+
+        break;
+      }
+
+      default:
+        break;
+    }
+
+    return;
+  }
+}
