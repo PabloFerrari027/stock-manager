@@ -8,7 +8,7 @@ export default defineConfig({
 	test: {
 		include: ['src/**/*.e2e.spec.ts'],
 		exclude: ['src/**/*.unit.spec.ts'],
-		setupFiles: ['src/shared/infra/tests/setupE2E.ts'],
+		setupFiles: ['./src/shared/tests/setupE2E.ts'],
 		poolOptions: {
 			threads: {
 				singleThread: true,

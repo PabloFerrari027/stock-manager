@@ -18,7 +18,7 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "plop": "plop",
     "test:unit": "vitest -c ./vite.config.unit.mts",
-    "test:e2e": "chmod +x src/shared/infra/scripts/* && ./src/shared/infra/scripts/test-e2e.sh && vitest -c ./vite.config.e2e.ts"
+    "test:e2e": "chmod +x src/shared/infra/scripts/* && ./src/shared/infra/scripts/test-e2e.sh && vitest -c ./vite.config.e2e.mts"
   },
   "keywords": [],
   "author": "",
