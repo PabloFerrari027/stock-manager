@@ -1,103 +1,106 @@
-import ICategoriesRepository from "modules/categories/repositories/ICategoriesRepository";
+import ICategoriesRepository from '@modules/categories/repositories/ICategoriesRepository';
 
 import {
-  ICreateCategory,
-  IDeleteCategory,
-  IFindCategoryByID,
-  IListCategories,
-  IUpdateCategory,
-} from "../../repositories/types/params";
+	ICreateCategory,
+	IDeleteCategory,
+	IFindBySKUPrefix,
+	IFindCategoryByID,
+	IListCategories,
+	IUpdateCategory,
+} from '../../repositories/types/params';
 
 import {
-  ICreateCategoryResponse,
-  IFindCategoryByIDResponse,
-  IListCategoriesResponse,
-  IUpdateCategoryResponse,
-} from "../../repositories/types/responses";
+	ICreateCategoryResponse,
+	IFindBySKUPrefixResponse,
+	IFindCategoryByIDResponse,
+	IListCategoriesResponse,
+	IUpdateCategoryResponse,
+} from '../../repositories/types/responses';
 
-import { inject, injectable } from "tsyringe";
+import { injectable } from 'tsyringe';
 
-import IORMProvider from "@shared/providers/ORMProvider/models/IORMProvider";
-import ICategory from "modules/categories/repositories/types/ICategory";
-import CategoryEntity from "modules/categories/entities/CategoryEntity";
+import CategoryEntity from '@modules/categories/entities/CategoryEntity';
+import prisma from '@shared/infra/prisma/postgreSQL';
 
 @injectable()
 export default class CategoriesRepository implements ICategoriesRepository {
-  constructor(
-    @inject("ORMProvider")
-    private ORMProvider: IORMProvider,
-  ) {}
+	async create(data: ICreateCategory): Promise<ICreateCategoryResponse> {
+		const response = await prisma.categories.create({
+			data,
+		});
 
-  async create(data: ICreateCategory): Promise<ICreateCategoryResponse> {
-    const response = await this.ORMProvider.create<ICategory, ICreateCategory>({
-      data,
-      model: "categories",
-    });
+		const category = CategoryEntity.create(response);
 
-    const category = CategoryEntity.create(response);
+		return { category };
+	}
 
-    return { category };
-  }
+	async update(data: IUpdateCategory): Promise<IUpdateCategoryResponse> {
+		const updatedAt = data.updatedAt || new Date();
 
-  async update(data: IUpdateCategory): Promise<IUpdateCategoryResponse> {
-    const updatedAt = data.updatedAt || new Date();
+		const response = await prisma.categories.update({
+			data: { updatedAt, ...data },
+			where: { id: data.id },
+		});
 
-    const response = await this.ORMProvider.update<ICategory, IUpdateCategory>({
-      id: data.id,
-      data: { updatedAt, ...data },
-      model: "categories",
-    });
+		const category = new CategoryEntity(response);
 
-    const category = new CategoryEntity(response);
+		return { category };
+	}
 
-    return { category };
-  }
+	async findByID({
+		id,
+	}: IFindCategoryByID): Promise<IFindCategoryByIDResponse> {
+		const response = await prisma.categories.findUnique({
+			where: { id },
+		});
 
-  async findByID(data: IFindCategoryByID): Promise<IFindCategoryByIDResponse> {
-    const response = await this.ORMProvider.find<
-      ICategory | null,
-      IFindCategoryByID
-    >({
-      key: "id",
-      model: "categories",
-      data,
-    });
+		if (!response) return { category: null };
 
-    if (!response) return { category: null };
+		const category = new CategoryEntity(response);
 
-    const category = new CategoryEntity(response);
+		return { category };
+	}
 
-    return { category };
-  }
+	async findBySKUPrefix({
+		SKUPrefix,
+	}: IFindBySKUPrefix): Promise<IFindBySKUPrefixResponse> {
+		const response = await prisma.categories.findFirst({
+			where: { SKUPrefix },
+		});
 
-  async list(data: IListCategories): Promise<IListCategoriesResponse> {
-    const take = data.take || 100;
-    const skip = data.skip || 0;
+		if (!response) return { category: null };
 
-    const response = await this.ORMProvider.list<ICategory[], IListCategories>({
-      model: "categories",
-      skip,
-      take,
-    });
+		const category = new CategoryEntity(response);
 
-    const categories: CategoryEntity[] = response.map((item) => {
-      const category = CategoryEntity.create(item);
-      return category;
-    });
+		return { category };
+	}
 
-    const count = await this.ORMProvider.count({ model: "categories" });
+	async list(data: IListCategories): Promise<IListCategoriesResponse> {
+		const take = data.take || 100;
+		const skip = data.skip || 0;
 
-    const hasNext = take + skip < count;
+		const response = await prisma.categories.findMany({
+			skip,
+			take,
+		});
 
-    return { categories, hasNext };
-  }
+		const categories: CategoryEntity[] = response.map(item => {
+			const category = CategoryEntity.create(item);
+			return category;
+		});
 
-  async delete(data: IDeleteCategory): Promise<void> {
-    await this.ORMProvider.delete({
-      id: data.id,
-      model: "categories",
-    });
+		const count = await prisma.categories.count();
 
-    return;
-  }
+		const hasNext = take + skip < count;
+
+		return { categories, hasNext };
+	}
+
+	async delete({ id }: IDeleteCategory): Promise<void> {
+		await prisma.categories.delete({
+			where: { id },
+		});
+
+		return;
+	}
 }

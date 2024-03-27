@@ -1,56 +1,56 @@
-import Entity from "@shared/entities/Entity";
+import Entity from '@shared/entities/Entity';
 
 interface IProps {
-  name: string;
-  isActive: boolean;
-  SKUPrefix: string;
-  createdAt: Date;
-  updatedAt: Date;
+	name: string;
+	isActive: boolean;
+	SKUPrefix: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 interface ICreateCategory {
-  id?: number;
-  name: string;
-  SKUPrefix: string;
-  isActive: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
+	id?: string;
+	name: string;
+	SKUPrefix: string;
+	isActive: boolean;
+	createdAt?: Date;
+	updatedAt?: Date;
 }
 
 export default class CategoryEntity extends Entity<IProps> {
-  get name(): string {
-    return this.props.name;
-  }
+	get name(): string {
+		return this.props.name;
+	}
 
-  get SKUPrefix(): string {
-    return this.props.SKUPrefix;
-  }
+	get SKUPrefix(): string {
+		return this.props.SKUPrefix;
+	}
 
-  get isActive(): boolean {
-    return this.props.isActive;
-  }
+	get isActive(): boolean {
+		return this.props.isActive;
+	}
 
-  get createdAt(): Date {
-    return this.props.createdAt;
-  }
+	get createdAt(): Date {
+		return this.props.createdAt;
+	}
 
-  get updatedAt(): Date {
-    return this.props.updatedAt;
-  }
+	get updatedAt(): Date {
+		return this.props.updatedAt;
+	}
 
-  static create({ id, ...data }: ICreateCategory): CategoryEntity {
-    const createdAt = data.createdAt || new Date();
-    const updatedAt = data.createdAt || new Date();
+	static create({ id, ...data }: ICreateCategory): CategoryEntity {
+		const createdAt = data.createdAt || new Date();
+		const updatedAt = data.createdAt || new Date();
 
-    const category = new CategoryEntity(
-      {
-        ...data,
-        updatedAt,
-        createdAt,
-      },
-      id,
-    );
+		const category = new CategoryEntity(
+			{
+				...data,
+				updatedAt,
+				createdAt,
+			},
+			id,
+		);
 
-    return category;
-  }
+		return category;
+	}
 }

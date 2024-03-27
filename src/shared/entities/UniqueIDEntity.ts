@@ -1,11 +1,13 @@
+import { randomUUID } from 'crypto';
+
 export default class UniqueIDEntity {
-  protected _id: number;
+	protected _id: string;
 
-  get id(): number {
-    return this._id;
-  }
+	get id(): string {
+		return this._id;
+	}
 
-  constructor(id?: number) {
-    this._id = id ?? 0;
-  }
+	constructor(id?: string) {
+		this._id = id ?? randomUUID();
+	}
 }

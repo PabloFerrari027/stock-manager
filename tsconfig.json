@@ -6,10 +6,15 @@
     "module": "commonjs",
     "moduleResolution": "Node",
     "outDir": "./build",
-    "rootDir": "./src",
-    "baseUrl": "./src",
+    "rootDir": "./",
+    "baseUrl": ".",
     "paths": {
-      "@shared/*": ["shared/*"]
+      "@shared/*": [
+        "src/shared/*"
+      ],
+      "@modules/*": [
+        "src/modules/*"
+      ]
     },
     "removeComments": true,
     "importsNotUsedAsValues": "remove",
@@ -21,7 +26,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "esModuleInterop": true,
   },
-  "exclude": ["./vite.config.ts", "vite.config.unit.ts", "./plopfile.js", "./src/shared/tests/**"]
+  "exclude": [
+    "./plopfile.js",
+    "./src/shared/tests/**"
+  ]
 }

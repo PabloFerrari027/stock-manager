@@ -1,3 +1,3 @@
 export default interface IFindCategoryByID {
-  id: number;
+	id: string;
 }
